@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "check_id": "rules.php.move_uploaded_file.review",
+      "path": "plugins\\contact-form-7\\includes\\file.php",
+      "start": {
+        "line": 76,
+        "col": 19,
+        "offset": 2105
+      },
+      "end": {
+        "line": 76,
+        "col": 38,
+        "offset": 2124
+      },
+      "extra": {
+        "message": "Review file upload handling (validate type, name, and path).",
+        "metadata": {
+          "cwe": "CWE-434",
+          "owasp": "A01:2021-Broken Access Control",
+          "category": "security",
+          "confidence": "low"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+plugin,path,line,rule,severity,message
+contact-form-7,plugins\contact-form-7\includes\file.php,,rules.php.move_uploaded_file.review,WARNING,"Review file upload handling (validate type, name, and path)."

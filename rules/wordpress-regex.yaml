@@ -1,0 +1,127 @@
+rules:
+  - id: php.insecure.eval-or-assert
+    languages: [php]
+    message: Avoid eval()/assert() on dynamic input (possible RCE).
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95"
+      owasp: A03:2021-Injection
+      category: security
+      confidence: medium
+    pattern-regex: "(?i)\\b(eval|assert)\\s*\\("
+
+  - id: php.preg_replace.e-modifier
+    languages: [php]
+    message: preg_replace with /e modifier leads to code execution.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-94"
+      owasp: A03:2021-Injection
+      category: security
+      confidence: high
+    pattern-regex: "(?i)\\bpreg_replace\\s*\\(\\s*['\\\"][^'\\\"]*e[^'\\\"]*['\\\"]"
+
+  - id: php.create_function.usage
+    languages: [php]
+    message: Deprecated create_function can enable code injection.
+    severity: WARNING
+    metadata:
+      cwe: "CWE-94"
+      category: security
+      confidence: medium
+    pattern-regex: "\\bcreate_function\\s*\\("
+
+  - id: php.unserialize.superglobal
+    languages: [php]
+    message: Unserialize on user input (RCE/object injection risk).
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502"
+      owasp: A08:2021-Software and Data Integrity Failures
+      category: security
+      confidence: high
+    pattern-regex: "\\bunserialize\\s*\\(\\s*\\$_(GET|POST|REQUEST|COOKIE|SERVER)\\b"
+
+  - id: php.include.require.userinput
+    languages: [php]
+    message: include/require with user input (LFI/RFI risk).
+    severity: ERROR
+    metadata:
+      cwe: "CWE-98"
+      owasp: A01:2021-Broken Access Control
+      category: security
+      confidence: high
+    pattern-regex: "\\b(include|require)(?:_once)?\\s*\\(\\s*\\$_(GET|POST|REQUEST|COOKIE)\\b"
+
+  - id: php.file.op.userinput
+    languages: [php]
+    message: File operation uses user input (path traversal risk).
+    severity: WARNING
+    metadata:
+      cwe: "CWE-22"
+      owasp: A01:2021-Broken Access Control
+      category: security
+      confidence: medium
+    pattern-regex: "\\b(file_get_contents|fopen|file_put_contents|readfile|unlink|rename|copy)\\s*\\(\\s*\\$_(GET|POST|REQUEST|FILES)\\b"
+
+  - id: php.move_uploaded_file.review
+    languages: [php]
+    message: Review file upload handling (validate type, name, and path).
+    severity: WARNING
+    metadata:
+      cwe: "CWE-434"
+      owasp: A01:2021-Broken Access Control
+      category: security
+      confidence: low
+    pattern-regex: "\\bmove_uploaded_file\\s*\\("
+
+  - id: wordpress.db.query.superglobal
+    languages: [php]
+    message: $wpdb query appears to use user input; ensure prepare() is used.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      owasp: A03:2021-Injection
+      category: security
+      confidence: medium
+    patterns:
+      - pattern-regex: "\\$wpdb->(query|get_results|get_var|get_row)\\s*\\([^)]*\\$_(GET|POST|REQUEST|COOKIE)[^)]*\\)"
+      - pattern-not-regex: "prepare\\s*\\("
+
+  - id: wordpress.db.query.concatenation
+    languages: [php]
+    message: $wpdb query with string concatenation (likely unprepared SQL).
+    severity: WARNING
+    metadata:
+      cwe: "CWE-89"
+      owasp: A03:2021-Injection
+      category: security
+      confidence: low
+    patterns:
+      - pattern-regex: "\\$wpdb->(query|get_results|get_var|get_row)\\s*\\([^)]*\\.[^)]*\\)"
+      - pattern-not-regex: "prepare\\s*\\("
+
+  - id: wordpress.echo.userinput
+    languages: [php]
+    message: Outputting user input without escaping (XSS risk).
+    severity: ERROR
+    metadata:
+      cwe: "CWE-79"
+      owasp: A03:2021-Injection
+      category: security
+      confidence: medium
+    patterns:
+      - pattern-regex: "\\b(echo|print|printf|die|exit)\\b[^;\\n]*\\$_(GET|POST|REQUEST|COOKIE)"
+      - pattern-not-regex: "esc_(html|attr|url)|wp_kses"
+
+  - id: wordpress.http.ssrf.userinput
+    languages: [php]
+    message: wp_remote_* with user input (SSRF risk); validate URL/host.
+    severity: WARNING
+    metadata:
+      cwe: "CWE-918"
+      owasp: A10:2021-SSRF
+      category: security
+      confidence: medium
+    pattern-regex: "\\bwp_remote_(get|post|request|head)\\s*\\([^)]*\\$_(GET|POST|REQUEST|COOKIE)[^)]*\\)"
+
